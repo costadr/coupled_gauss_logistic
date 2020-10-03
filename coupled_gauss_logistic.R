@@ -266,7 +266,7 @@ highlightExtreme <- function(delta=seq(1e-10,38,length=200),
 }
 
 extreme <- function(delta=c(0,38), gama=c(1,1), beta=c(-1,1), 
-                    p1=c(0,1,-1), p2=c(0,1,0), direction="right",
+                    p1=c(0,1,-1), p2=c(0,1,0), theta=0,
                     from="xr", to="xm", maxiter=2, step=0.01){
   f <- function(delta, gama, beta, maxiter, from, to){
     if(from=='xl'){
@@ -330,18 +330,12 @@ extreme <- function(delta=c(0,38), gama=c(1,1), beta=c(-1,1),
   }
   # Finding second point
   # Another bisection method is considered but now changing the angle theta
-  if(direction=="up"){
-    tetaa <- 0
-  }else if(direction == "left"){
-    tetaa <- pi/2
-  }else if(direction == "down"){
-    tetaa <- pi
-  }else if(direction == "right"){
-    tetaa <- 3*pi/2
+  if(is.numeric(theta)){
+    tetaa <- theta-pi/2
   }else{
-    print("ERROR, unknown direction. Choose between up, left, right and down.")
+    print("ERROR, unknown direction for theta.")
   }
-  tetab <- tetaa+pi
+  tetab <- theta+pi/2
   
   delta1  <- vector()
   gama1   <- vector()
@@ -378,7 +372,7 @@ extreme <- function(delta=c(0,38), gama=c(1,1), beta=c(-1,1),
     }
     fb    <- f(deltam, gamam, betam, maxiter, from, to)
     if(fa*fb>0){
-      return(print(c("!Something wrong with tetaa and tetab",nsteps)))
+      return(print(c("!Something is wrong with tetaa and tetab",nsteps)))
     }
     for(itimes in 1:50){
       tetam  <- (tetaa+tetab)/2
